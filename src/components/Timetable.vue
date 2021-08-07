@@ -4,9 +4,9 @@
     <tt-header class="left-header" :orientation="'v'" :cells-text="clsNums"></tt-header>
     <div class="timetable-info">
       <timetable-row
-          :key="weekDay"
+          :key="idx"
           :classes="classes"
-          v-for="(classes, weekDay) in weekClasses"
+          v-for="(classes, idx) in weekClasses"
       />
     </div>
   </div>
@@ -29,12 +29,12 @@ export default {
           'Суббота'
       ],
       clsNums: [
-          '1 пара\n\n9:00\n-\n10:30',
-          '2 пара\n\n10:40\n-\n12:10',
-          '3 пара\n\n12:40\n-\n14:10',
-          '4 пара\n\n14:20\n-\n15:50',
-          '5 пара\n\n16:20\n-\n17:50',
-          '6 пара\n\n18:00\n-\n19:30'
+          ['1 пара', '9:00', '\u2013', '10:30'],
+          ['2 пара', '10:40', '\u2013', '12:10'],
+          ['3 пара', '12:40', '\u2013', '14:10'],
+          ['4 пара', '14:20', '\u2013', '15:50'],
+          ['5 пара', '16:20', '\u2013', '17:50'],
+          ['6 пара', '18:00', '\u2013', '19:30']
       ]
     }
   },

@@ -8,13 +8,17 @@
         class="tt-header-cell"
         :key="idx"
         v-for="(text, idx) in cellsText"
-    >{{ text }}</div>
+    >
+      <tt-header-cell-content :text="text"/>
+    </div>
   </div>
 </template>
 
 <script>
+import TtHeaderCellContent from "@/components/UI/TtHeaderCellContent";
 export default {
   name: "tt-header",
+  components: {TtHeaderCellContent},
   props: {
     orientation: {
       type: String,
@@ -59,7 +63,7 @@ export default {
 }
 
 .tt-header.v > .tt-header-cell {
-  /*align-self: center;*/
+  display: flex;
   padding: 0 5px;
   border-bottom: 1px solid var(--mosit-gray-color);
   border-right: none;
