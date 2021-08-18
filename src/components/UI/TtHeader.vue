@@ -38,15 +38,16 @@ export default {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   justify-content: space-evenly;
 
-  border: 1px solid var(--mosit-gray-color);
+  border: 1px solid var(--tt-head-brd-clr);
   border-bottom: none;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .tt-header > .tt-header-cell {
-  padding: 6px 0;
+  padding: 5px;
   background-color: var(--tt-head-bg-clr);
-  border-right: 1px solid var(--mosit-gray-color);
+  color: var(--tt-head-clr);
+  border-right: 1px solid var(--tt-head-brd-clr);
 }
 
 .tt-header > .tt-header-cell:last-child {
@@ -64,8 +65,8 @@ export default {
 
 .tt-header.v > .tt-header-cell {
   display: flex;
-  padding: 0 5px;
-  border-bottom: 1px solid var(--mosit-gray-color);
+  padding: 5px;
+  border-bottom: 1px solid var(--tt-head-brd-clr);
   border-right: none;
 
   background-color: var(--tt-head-bg-clr);

@@ -5,8 +5,8 @@
       <div class="name">{{ classInfo.name }}</div>
       <div class="group">{{ classInfo.group }}</div>
       <div class="type">{{ classInfo.type }}</div>
-      <div class="aud">{{ classInfo.aud }}</div>
-      <div class="prof">{{ classInfo.prof }}</div>
+      <div class="room">{{ classInfo.room }}</div>
+<!--      <div class="teacher">{{ classInfo.teacher }}</div>-->
     </div>
   </div>
 </template>
@@ -24,19 +24,23 @@ export default {
 </script>
 
 <style scoped>
-  .class-placeholder {
-    height: 100%;
-    background-color: whitesmoke;
-  }
-
   .cls-info {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    border-right: 1px solid var(--mosit-gray-color);
+    border-right: 1px solid var(--tt-brd-clr);
+  }
+
+  .class-placeholder {
+    height: 100%;
+    background-color: var(--tt-placaholder-bg-clr);
   }
 
   .cls-info:last-child {
     border-right: none;
+  }
+
+  .cls-info > .class-container {
+    padding: 10px;
   }
 </style>

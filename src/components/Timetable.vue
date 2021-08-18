@@ -29,12 +29,12 @@ export default {
           'Суббота'
       ],
       clsNums: [
-          ['1 пара', '9:00', '\u2013', '10:30'],
-          ['2 пара', '10:40', '\u2013', '12:10'],
-          ['3 пара', '12:40', '\u2013', '14:10'],
-          ['4 пара', '14:20', '\u2013', '15:50'],
-          ['5 пара', '16:20', '\u2013', '17:50'],
-          ['6 пара', '18:00', '\u2013', '19:30']
+          '1 пара\n9:00\n10:30',
+          '2 пара\n10:40\n12:10',
+          '3 пара\n12:40\n14:10',
+          '4 пара\n14:20\n15:50',
+          '5 пара\n16:20\n17:50',
+          '6 пара\n18:00\n19:30'
       ]
     }
   },
@@ -50,15 +50,19 @@ export default {
 <style scoped>
 .timetable-container {
   display: grid;
+  grid-template-columns: min-content;
 }
 
 .timetable-container > .timetable-info {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-  justify-content: space-evenly;
+  justify-content: stretch;
 
-  border: 1px solid var(--mosit-gray-color);
+  border: 1px solid var(--tt-head-brd-clr);
+  border-right: 1px solid var(--tt-brd-clr);
   border-bottom: none;
+
+  font-size: 16px;
 }
 
 .timetable-container > .top-header {

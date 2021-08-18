@@ -1,15 +1,9 @@
 <template>
-  <div
-      class="tt-header-cell-content-list"
-      v-if="typeof text === 'object'"
-  >
+  <div class="tt-header-cell-content-list">
     <div
         :key="idx"
-        v-for="(item, idx) in text"
+        v-for="(item, idx) in parseCellText(text)"
     >{{ item }}</div>
-  </div>
-  <div class="tt-header-cell-content" v-else>
-    {{ text }}
   </div>
 </template>
 
@@ -18,9 +12,12 @@ export default {
   name: "tt-header-cell-content",
   props: {
     text: {
-      type: [Object, String],
+      type: String,
       required: true
     }
+  },
+  methods: {
+    parseCellText: text => text.split('\n')
   }
 }
 </script>

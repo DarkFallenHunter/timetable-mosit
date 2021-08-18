@@ -18,7 +18,17 @@ export default {
   box-sizing: border-box;
   --mosit-gray-color: #737373;
   --main-text-color: black;
-  --tt-head-bg-clr: aliceblue;
+  --tt-head-bg-clr: gray;
+  --tt-head-clr: white;
+  --tt-head-brd-clr: black;
+  --tt-bg-color: white;
+  --tt-clr: var(--main-text-color);
+  --tt-brd-clr: var(--mosit-gray-color);
+  --tt-placaholder-bg-clr: whitesmoke;
+}
+
+select {
+  outline: none;
 }
 
 .app {
@@ -28,5 +38,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--main-text-color);
+  font-size: 18px;
 }
 </style>
