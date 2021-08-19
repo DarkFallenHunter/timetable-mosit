@@ -1,5 +1,10 @@
+default:
+  image: alpine:latest
+
 build-job:
   stage: build
+  tags:
+    - acer-runner
   script:
     - echo "Hello, $GITLAB_USER_LOGIN!"
 
