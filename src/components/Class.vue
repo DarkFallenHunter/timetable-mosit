@@ -6,7 +6,7 @@
       <div class="group">{{ classInfo.group }}</div>
       <div class="type">{{ classInfo.type }}</div>
       <div class="room">{{ classInfo.room }}</div>
-<!--      <div class="teacher">{{ classInfo.teacher }}</div>-->
+      <div class="weeks" v-if="'week_nums' in classInfo">{{ classInfo.week_nums }}</div>
     </div>
   </div>
 </template>

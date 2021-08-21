@@ -3,45 +3,35 @@
     <tt-header class="top-header" :orientation="'h'" :cells-text="weekDays" ></tt-header>
     <tt-header class="left-header" :orientation="'v'" :cells-text="clsNums"></tt-header>
     <div class="timetable-info">
-      <timetable-row
-          :key="idx"
-          :classes="classes"
-          v-for="(classes, idx) in weekClasses"
-      />
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import TimetableRow from "@/components/TimetableRow";
 import TtHeader from "@/components/UI/TtHeader";
+
 export default {
-  name: "timetable",
-  components: {TtHeader, TimetableRow},
+  name: "timetable-base",
+  components: {TtHeader},
   data() {
     return {
       weekDays: [
-          'Понедельник',
-          'Вторник',
-          'Среда',
-          'Четверг',
-          'Пятница',
-          'Суббота'
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота'
       ],
       clsNums: [
-          '1 пара\n9:00\n10:30',
-          '2 пара\n10:40\n12:10',
-          '3 пара\n12:40\n14:10',
-          '4 пара\n14:20\n15:50',
-          '5 пара\n16:20\n17:50',
-          '6 пара\n18:00\n19:30'
+        '1 пара\n9:00\n10:30',
+        '2 пара\n10:40\n12:10',
+        '3 пара\n12:40\n14:10',
+        '4 пара\n14:20\n15:50',
+        '5 пара\n16:20\n17:50',
+        '6 пара\n18:00\n19:30'
       ]
-    }
-  },
-  props: {
-    weekClasses: {
-      type: Object,
-      required: true
     }
   }
 }

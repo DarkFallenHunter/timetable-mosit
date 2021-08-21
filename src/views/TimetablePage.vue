@@ -34,19 +34,21 @@
       <div class="tt-load" v-else-if="isTimeTableLoading">
         Идёт загрузка расписания...
       </div>
-      <timetable :weekClasses="classes" v-else/>
+      <timetable-full :weekClasses="classes" v-else-if="selectedWeek === '-1'"/>
+      <timetable-for-week :weekClasses="classes" v-else/>
     </div>
   </div>
 </template>
 
 <script>
-import Timetable from "@/components/Timetable";
+import TimetableForWeek from "@/components/TimetableForWeek";
 import axios from "axios";
 import MySelect from "@/components/UI/MySelect";
+import TimetableFull from "@/components/TimetableFull";
 // import TeacherSelect from "@/components/UI/TeacherSelect";
 export default {
   name: "TimetablePage",
-  components: {MySelect, Timetable},
+  components: {TimetableFull, TimetableForWeek, MySelect},
   data() {
     return {
       classes: [],
@@ -95,7 +97,7 @@ export default {
         this.isTeacherListLoading = false;
       }
     },
-    async fetchTeacherClasses() {
+    async fetchTeacherClassesForWeek() {
       try {
         this.isTimeTableLoading = true;
         const response = await axios.get(
@@ -109,9 +111,26 @@ export default {
         this.isTimeTableLoading = false;
       }
     },
+    async fetchTeacherAllClasses() {
+      try {
+        this.isTimeTableLoading = true;
+        const response = await axios.get(
+            `http://127.0.0.1:8000/teacher_classes/${this.selectedTeacherId}`
+        );
+        this.classes = response.data;
+        this.ttLoadError = false;
+      } catch (e) {
+        this.ttLoadError = true;
+      } finally {
+        this.isTimeTableLoading = false;
+      }
+    },
     changeTeacher() {
       if (this.selectedWeek !== '') {
-        this.fetchTeacherClasses();
+        if (this.selectedWeek === '-1')
+          this.fetchTeacherAllClasses()
+        else
+          this.fetchTeacherClassesForWeek();
       }
       else
         this.selectWeekMes = true;
@@ -120,7 +139,10 @@ export default {
     },
     changeWeek() {
       if (this.selectedTeacherId !== '') {
-        this.fetchTeacherClasses();
+        if (this.selectedWeek === '-1')
+          this.fetchTeacherAllClasses()
+        else
+          this.fetchTeacherClassesForWeek();
       }
       else
         this.selectTeacherMes = true;
@@ -130,7 +152,6 @@ export default {
     }
   },
   mounted() {
-
     this.fetchTeachesList();
   }
 }
