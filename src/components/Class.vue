@@ -25,19 +25,15 @@ export default {
 
 <style scoped>
   .cls-info {
-    display: flex;
-    flex-direction: column;
     justify-content: space-around;
-    border-right: 1px solid var(--tt-brd-clr);
+    border: 1px solid var(--tt-brd-clr);
+    border-top: none;
+    border-left: none;
   }
 
   .class-placeholder {
     height: 100%;
     background-color: var(--tt-placaholder-bg-clr);
-  }
-
-  .cls-info:last-child {
-    border-right: none;
   }
 
   .cls-info > .class-container {

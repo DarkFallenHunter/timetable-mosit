@@ -1,9 +1,7 @@
 <!-- Подумать над KEY -->
 <template>
-  <div
-      class="tt-header"
-      :class="{ v: orientation === 'v' }"
-  >
+  <div class="tt-header">
+    <tt-vertical-header :cell-text="'00:00'" :class="'header-placeholder'"/>
     <div
         class="tt-header-cell"
         :key="idx"
@@ -16,30 +14,29 @@
 
 <script>
 import TtHeaderCellContent from "@/components/UI/TtHeaderCellContent";
+import TtVerticalHeader from "@/components/UI/TtVerticalHeader";
 export default {
   name: "tt-header",
-  components: {TtHeaderCellContent},
+  components: {TtVerticalHeader, TtHeaderCellContent},
   props: {
-    orientation: {
-      type: String,
-      default: 'h'
+    weeksNumPlaceholder: {
+      type: Boolean,
+      default: false
     },
     cellsText: {
-      type: Array,
+      type: String,
       required: true
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .tt-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: min-content 1fr 1fr 1fr 1fr 1fr 1fr;
   justify-content: space-evenly;
 
-  border: 1px solid var(--tt-head-brd-clr);
-  border-bottom: none;
   font-weight: normal;
 }
 
@@ -47,20 +44,16 @@ export default {
   padding: 5px;
   background-color: var(--tt-head-bg-clr);
   color: var(--tt-head-clr);
-  border-right: 1px solid var(--tt-head-brd-clr);
+  border: 1px solid var(--tt-head-brd-clr);
+  border-left: none;
 }
 
-.tt-header > .tt-header-cell:last-child {
-  border-right: none;
-}
 
 .tt-header.v {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-columns: auto;
 
   border-right: none;
-  /*align-items: center;*/
-  /*justify-items: center;*/
 }
 
 .tt-header.v > .tt-header-cell {
@@ -73,8 +66,16 @@ export default {
   white-space: pre-wrap;
 }
 
-.tt-header.h > .tt-header-cell:last-child {
-  border-bottom: none;
+.tt-vertical-header.header-placeholder {
+  /*padding: 0 5px;*/
+  /*border-right: 1px solid var(--tt-head-brd-clr);*/
+  border-left: 1px solid white;
+  /*border-bottom: none;*/
+  border-top: none;
 }
 
+.tt-vertical-header.header-placeholder > .tt-header-cell {
+  background-color: white;
+  color: white;
+}
 </style>

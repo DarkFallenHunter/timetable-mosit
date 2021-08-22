@@ -27,5 +27,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  font-size: 18px;
 }
 </style>
