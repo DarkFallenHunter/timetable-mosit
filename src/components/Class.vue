@@ -29,6 +29,9 @@ export default {
     border: 1px solid var(--tt-brd-clr);
     border-top: none;
     border-left: none;
+
+    font-size: 16px;
+    word-wrap: anywhere;
   }
 
   .class-placeholder {

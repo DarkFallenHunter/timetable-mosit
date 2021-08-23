@@ -1,5 +1,5 @@
 <template>
-  <div class="tt-vertical-header">
+  <div class="tt-vertical-header" :class="{'header-placeholder': isPlaceholder}">
     <div class="tt-header-cell">
       <tt-header-cell-content :text="cellText"/>
     </div>
@@ -15,6 +15,10 @@ export default {
     cellText: {
       type: String,
       required: true
+    },
+    isPlaceholder: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -36,5 +40,19 @@ export default {
   background-color: var(--tt-head-bg-clr);
   color: var(--tt-head-clr);
   white-space: pre-wrap;
+}
+
+.tt-vertical-header.header-placeholder:first-of-type {
+  border-left: 1px solid white;
+}
+
+.tt-vertical-header.header-placeholder {
+  border-left: 1px solid white;
+  border-right: none;
+}
+
+.tt-vertical-header.header-placeholder > .tt-header-cell {
+  background-color: white;
+  color: white;
 }
 </style>

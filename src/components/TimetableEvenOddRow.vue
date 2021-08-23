@@ -1,8 +1,8 @@
 <template>
   <div class="tt-even-odd-row">
     <tt-vertical-header :cell-text="headerText"/>
-    <div>
     <div class="odd-even-row">
+      <tt-vertical-header cell-text="1"/>
       <div
           class="clss"
           :key="idx"
@@ -16,6 +16,7 @@
       </div>
     </div>
     <div class="odd-even-row">
+      <tt-vertical-header cell-text="2"/>
       <div
           class="clss"
           :key="idx"
@@ -27,7 +28,6 @@
             :key="clsInfo.id"
         />
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -57,16 +57,27 @@ export default {
   grid-template-columns: min-content 1fr;
 }
 
-.odd-even-row {
+.tt-even-odd-row > .tt-vertical-header {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.tt-even-odd-row > .odd-even-row {
+  grid-column: 2;
+
   display: grid;
-  grid-template-columns: repeat( 6, 1fr );
+  grid-template-columns: min-content repeat( 6, 1fr );
 
   width: auto;
   box-sizing: border-box;
 }
 
-.clss {
+.tt-even-odd-row > .odd-even-row > .clss {
   display: grid;
   grid-template-columns: 1fr;
+}
+
+.tt-even-odd-row > .odd-even-row > .tt-vertical-header {
+  border-left: none;
 }
 </style>

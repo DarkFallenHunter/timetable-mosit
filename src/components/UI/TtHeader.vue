@@ -1,7 +1,10 @@
 <!-- Подумать над KEY -->
 <template>
   <div class="tt-header">
-    <tt-vertical-header :cell-text="'00:00'" :class="'header-placeholder'"/>
+    <div class="placeholders">
+    <tt-vertical-header :cell-text="'00:00'" :is-placeholder="true"/>
+    <tt-vertical-header v-if="isWeeksMark" :cell-text="'2'" :is-placeholder="true"/>
+    </div>
     <div
         class="tt-header-cell"
         :key="idx"
@@ -19,7 +22,7 @@ export default {
   name: "tt-header",
   components: {TtVerticalHeader, TtHeaderCellContent},
   props: {
-    weeksNumPlaceholder: {
+    isWeeksMark: {
       type: Boolean,
       default: false
     },
@@ -40,6 +43,10 @@ export default {
   font-weight: normal;
 }
 
+/*.tt-header.with-week-marks {*/
+/*  grid-template-columns: min-content min-content 1fr 1fr 1fr 1fr 1fr 1fr;*/
+/*}*/
+
 .tt-header > .tt-header-cell {
   padding: 5px;
   background-color: var(--tt-head-bg-clr);
@@ -48,34 +55,9 @@ export default {
   border-left: none;
 }
 
-
-.tt-header.v {
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-columns: auto;
-
-  border-right: none;
-}
-
-.tt-header.v > .tt-header-cell {
+.tt-header > .placeholders {
   display: flex;
-  padding: 5px;
-  border-bottom: 1px solid var(--tt-head-brd-clr);
-  border-right: none;
-
-  background-color: var(--tt-head-bg-clr);
-  white-space: pre-wrap;
-}
-
-.tt-vertical-header.header-placeholder {
-  /*padding: 0 5px;*/
-  /*border-right: 1px solid var(--tt-head-brd-clr);*/
-  border-left: 1px solid white;
-  /*border-bottom: none;*/
-  border-top: none;
-}
-
-.tt-vertical-header.header-placeholder > .tt-header-cell {
-  background-color: white;
-  color: white;
+  flex-direction: row;
+  border-right: 1px solid var(--tt-head-brd-clr);
 }
 </style>

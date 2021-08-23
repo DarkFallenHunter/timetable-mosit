@@ -1,14 +1,16 @@
-build site:
-  image: node:6
-  stage: build
-  script:
-    - npm install --progress=false
-    - npm run build
-  artifacts:
-    paths:
-      - dist
+#build site:
+#  image: node:6
+#  stage: build
+#  script:
+#    - npm install --progress=false
+#    - npm run build
+#  artifacts:
+#    paths:
+#      - dist
 
 deploy:
+  tags:
+    - shell
   script:
     - docker build -t timetable-mosit .
     - docker run -d -p 80:80 --rm --name timetable-front timetable-mosit

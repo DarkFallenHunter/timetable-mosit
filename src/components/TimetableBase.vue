@@ -1,19 +1,15 @@
 <template>
   <div class="timetable-container">
-    <tt-header class="top-header" :cells-text="weekDays" ></tt-header>
-<!--    <tt-header class="left-header" :orientation="'v'" :cells-text="clsNums"></tt-header>-->
-    <div class="timetable-info">
-      <slot></slot>
-    </div>
+<!--    <div class="timetable-info">-->
+    <slot></slot>
+<!--    </div>-->
   </div>
 </template>
 
 <script>
-import TtHeader from "@/components/UI/TtHeader";
 
 export default {
   name: "timetable-base",
-  components: {TtHeader},
   data() {
     return {
       weekDays: [
@@ -34,12 +30,12 @@ export default {
   display: grid;
 }
 
-.timetable-container > .timetable-info {
-  display: grid;
-  justify-content: stretch;
+/*.timetable-container > .timetable-info {*/
+/*  display: grid;*/
+/*  justify-content: stretch;*/
 
-  border-bottom: none;
+/*  border-bottom: none;*/
 
-  font-size: 16px;
-}
+/*  font-size: 16px;*/
+/*}*/
 </style>

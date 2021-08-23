@@ -1,5 +1,6 @@
 <template>
   <timetable-base>
+    <tt-header :is-weeks-mark="true" class="top-header" :cells-text="weekDays" ></tt-header>
     <timetable-even-odd-row
         :key="idx"
         :classes-info="classes"
@@ -12,9 +13,11 @@
 <script>
 import TimetableBase from "@/components/TimetableBase";
 import TimetableEvenOddRow from "@/components/TimetableEvenOddRow";
+import TtHeader from "@/components/UI/TtHeader";
+
 export default {
   name: "TimetableFull",
-  components: {TimetableEvenOddRow, TimetableBase},
+  components: {TimetableEvenOddRow, TimetableBase, TtHeader},
   data() {
     return {
       headerContent: [
@@ -24,6 +27,14 @@ export default {
         '4 пара\n14:20\n15:50',
         '5 пара\n16:20\n17:50',
         '6 пара\n18:00\n19:30'
+      ],
+      weekDays: [
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота'
       ]
     }
   },

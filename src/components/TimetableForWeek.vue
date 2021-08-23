@@ -1,5 +1,6 @@
 <template>
   <timetable-base>
+    <tt-header class="top-header" :cells-text="weekDays" ></tt-header>
     <timetable-row
         :key="idx"
         :classes="classes"
@@ -12,9 +13,11 @@
 <script>
 import TimetableRow from "@/components/TimetableRow";
 import TimetableBase from "@/components/TimetableBase";
+import TtHeader from "@/components/UI/TtHeader";
+
 export default {
   name: "timetable-for-week",
-  components: {TimetableBase, TimetableRow},
+  components: {TimetableBase, TimetableRow, TtHeader},
   data() {
     return {
       headerContent: [
@@ -24,6 +27,14 @@ export default {
         '4 пара\n14:20\n15:50',
         '5 пара\n16:20\n17:50',
         '6 пара\n18:00\n19:30'
+      ],
+      weekDays: [
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота'
       ]
     }
   },
