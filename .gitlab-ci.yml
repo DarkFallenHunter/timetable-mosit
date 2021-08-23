@@ -13,4 +13,4 @@ deploy:
     - shell
   script:
     - docker build -t timetable-mosit .
-    - docker run -d -p 8081:8081 --rm --name timetable-front timetable-mosit
+    - docker run -d -p 8085:80 --rm --name timetable-front timetable-mosit
