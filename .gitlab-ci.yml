@@ -12,5 +12,6 @@ deploy:
   tags:
     - shell
   script:
+    - docker rm -f timetable-front
     - docker build -t timetable-mosit .
     - docker run -d -p 8085:80 --rm --name timetable-front timetable-mosit
