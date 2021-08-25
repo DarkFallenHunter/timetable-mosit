@@ -86,7 +86,7 @@ export default {
       try {
         this.isTeacherListLoading = true;
         const response = await axios.get(
-            'http://localhost:8088/teachers'
+            'https://api.mosit.venomroms.com/teachers'
         );
         // console.log(response);
         this.teachersList = response.data;
@@ -101,7 +101,7 @@ export default {
       try {
         this.isTimeTableLoading = true;
         const response = await axios.get(
-            `http://localhost:8088/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
+            `https://api.mosit.venomroms.com/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
         );
         this.classes = response.data;
         this.ttLoadError = false;
@@ -115,7 +115,7 @@ export default {
       try {
         this.isTimeTableLoading = true;
         const response = await axios.get(
-            `http://localhost:8088/teacher_classes/${this.selectedTeacherId}`
+            `https://api.mosit.venomroms.com/teacher_classes/${this.selectedTeacherId}`
         );
         this.classes = response.data;
         this.ttLoadError = false;
