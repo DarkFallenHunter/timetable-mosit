@@ -1,8 +1,8 @@
 <template>
   <div class="navbar">
-    <router-link to="/timetable">РАСПИСАНИЕ</router-link>
-    <router-link to="/about">ФОРМИРОВАНИЕ РАСПИСАНИЯ</router-link>
-    <router-link to="/">СОСТАВ КАФЕДРЫ</router-link>
+    <router-link to="/">РАСПИСАНИЕ</router-link>
+<!--    <router-link to="/about">ФОРМИРОВАНИЕ РАСПИСАНИЯ</router-link>-->
+<!--    <router-link to="/">СОСТАВ КАФЕДРЫ</router-link>-->
   </div>
 </template>
 
