@@ -78,7 +78,8 @@ export default {
         { id: "14", name: '14 неделя' },
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
-      ]
+      ],
+      apiUrl: 'http://ec2-18-156-3-138.eu-central-1.compute.amazonaws.com:8088/'
     }
   },
   methods: {
@@ -86,7 +87,7 @@ export default {
       try {
         this.isTeacherListLoading = true;
         const response = await axios.get(
-            'https://api-mosit.venomroms.com/teachers'
+            `${this.apiUrl}/teachers`
         );
         // console.log(response);
         this.teachersList = response.data;
@@ -101,7 +102,7 @@ export default {
       try {
         this.isTimeTableLoading = true;
         const response = await axios.get(
-            `https://api-mosit.venomroms.com/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
+            `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
         );
         this.classes = response.data;
         this.ttLoadError = false;
@@ -115,7 +116,7 @@ export default {
       try {
         this.isTimeTableLoading = true;
         const response = await axios.get(
-            `https://api-mosit.venomroms.com/teacher_classes/${this.selectedTeacherId}`
+            `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}`
         );
         this.classes = response.data;
         this.ttLoadError = false;

@@ -2,7 +2,7 @@
   <div class="header">
     <div class="info">
       <img src="../../assets/logo-mosit.svg" alt="MOSIT" class="logo">
-      <h1>КАФЕДРА <span>М</span>ЕТЕМАТИЧЕСКОГО <span>О</span>БЕСПЕЧЕНИЯ И <span>С</span>ТАНДАРТИЗАЦИИ <span>И</span>НФОРМАЦИОННЫХ <span>Т</span>ЕХНОЛОГИЙ</h1>
+      <h1>КАФЕДРА <span>М</span>АТЕМАТИЧЕСКОГО <span>О</span>БЕСПЕЧЕНИЯ И <span>С</span>ТАНДАРТИЗАЦИИ <span>И</span>НФОРМАЦИОННЫХ <span>Т</span>ЕХНОЛОГИЙ</h1>
       <div class="site-name">ВНУТРЕННИЙ САЙТ</div>
 <!--      <div class="contacts">-->
 <!--        <div class="phone">8(999)999-99-99</div>-->
