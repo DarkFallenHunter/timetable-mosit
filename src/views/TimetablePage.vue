@@ -79,7 +79,7 @@ export default {
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
       ],
-      apiUrl: 'http://ec2-18-156-3-138.eu-central-1.compute.amazonaws.com:8088/'
+      apiUrl: 'http://ec2-18-156-3-138.eu-central-1.compute.amazonaws.com:8088'
     }
   },
   methods: {
