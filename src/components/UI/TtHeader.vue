@@ -27,7 +27,7 @@ export default {
       default: false
     },
     cellsText: {
-      type: String,
+      type: Array,
       required: true
     }
   }

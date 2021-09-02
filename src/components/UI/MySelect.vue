@@ -1,7 +1,6 @@
 <template>
   <select class="select" v-model="selectedVal">
     <option disabled value="">Выберите из списка</option>
-    <option value="-1">Все недели</option>
     <option
         v-for="option in options"
         :key="option.id"

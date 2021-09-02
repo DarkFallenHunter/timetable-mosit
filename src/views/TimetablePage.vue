@@ -1,4 +1,5 @@
 <template>
+  <loading-circle v-if="isParsing"/>
   <div class="tl-load" v-if="isTeacherListLoading">Идет загрузка...</div>
 
   <div class="tt-page" v-else>
@@ -45,10 +46,11 @@ import TimetableForWeek from "@/components/TimetableForWeek";
 import axios from "axios";
 import MySelect from "@/components/UI/MySelect";
 import TimetableFull from "@/components/TimetableFull";
+import LoadingCircle from "@/components/UI/LoadingCircle";
 // import TeacherSelect from "@/components/UI/TeacherSelect";
 export default {
   name: "TimetablePage",
-  components: {TimetableFull, TimetableForWeek, MySelect},
+  components: {LoadingCircle, TimetableFull, TimetableForWeek, MySelect},
   data() {
     return {
       classes: [],
@@ -62,6 +64,7 @@ export default {
       selectTeacherMes: true,
       selectWeekMes: false,
       weeks: [
+        { id: "-1", name: 'Все недели' },
         { id: "1", name: '1 неделя' },
         { id: "2", name: '2 неделя' },
         { id: "3", name: '3 неделя' },
@@ -79,7 +82,9 @@ export default {
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
       ],
-      apiUrl: 'http://ec2-18-156-3-138.eu-central-1.compute.amazonaws.com:8088'
+      apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
+      // apiUrl: 'http://localhost:8088',
+      isParsing: false
     }
   },
   methods: {
@@ -126,6 +131,20 @@ export default {
         this.isTimeTableLoading = false;
       }
     },
+    async parseXlsxs() {
+      try {
+        this.isParsing = true;
+        const response = await axios.get(
+            `${this.apiUrl}/parse`
+        );
+        this.classes = response.data;
+        this.ttLoadError = false;
+      } catch (e) {
+        this.ttLoadError = true;
+      } finally {
+        this.isParsing = false;
+      }
+    },
     changeTeacher() {
       if (this.selectedWeek !== '') {
         if (this.selectedWeek === '-1')
@@ -154,6 +173,7 @@ export default {
   },
   mounted() {
     this.fetchTeachesList();
+    document.querySelector('.logo').addEventListener('click', this.parseXlsxs.bind(this));
   }
 }
 </script>

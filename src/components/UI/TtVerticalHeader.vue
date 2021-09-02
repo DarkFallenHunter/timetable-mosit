@@ -1,5 +1,5 @@
 <template>
-  <div class="tt-vertical-header" :class="{'header-placeholder': isPlaceholder}">
+  <div class="tt-vertical-header" :class="{'header-placeholder no-select': isPlaceholder}">
     <div class="tt-header-cell">
       <tt-header-cell-content :text="cellText"/>
     </div>
