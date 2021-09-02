@@ -137,7 +137,7 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/parse`
         );
-        this.classes = response.data;
+        console.log(response.data);
         this.ttLoadError = false;
       } catch (e) {
         this.ttLoadError = true;
