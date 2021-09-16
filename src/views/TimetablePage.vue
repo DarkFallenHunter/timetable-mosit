@@ -1,5 +1,6 @@
 <template>
   <loading-circle v-if="isParsing"/>
+  <error-dialog :header="errorHeader" :args="errorArgs" v-model:show="parseErrorDialog"/>
   <div class="tl-load" v-if="isTeacherListLoading">Идет загрузка...</div>
 
   <div class="tt-page" v-else>
@@ -47,10 +48,11 @@ import axios from "axios";
 import MySelect from "@/components/UI/MySelect";
 import TimetableFull from "@/components/TimetableFull";
 import LoadingCircle from "@/components/UI/LoadingCircle";
+import ErrorDialog from "@/components/UI/ErrorDialog";
 // import TeacherSelect from "@/components/UI/TeacherSelect";
 export default {
   name: "TimetablePage",
-  components: {LoadingCircle, TimetableFull, TimetableForWeek, MySelect},
+  components: {ErrorDialog, LoadingCircle, TimetableFull, TimetableForWeek, MySelect},
   data() {
     return {
       classes: [],
@@ -60,9 +62,12 @@ export default {
       selectedWeek: '',
       isTeacherListLoading: false,
       tlLoadError: false,
+      errorHeader:'',
+      errorArgs: '',
       selectedTeacherId: '',
       selectTeacherMes: true,
       selectWeekMes: false,
+      parseErrorDialog: false,
       weeks: [
         { id: "-1", name: 'Все недели' },
         { id: "1", name: '1 неделя' },
@@ -82,8 +87,8 @@ export default {
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
       ],
-      apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
-      // apiUrl: 'http://localhost:8088',
+      // apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
+      apiUrl: 'http://localhost:8088',
       isParsing: false
     }
   },
@@ -94,7 +99,6 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/teachers`
         );
-        // console.log(response);
         this.teachersList = response.data;
         this.tlLoadError = false;
       } catch (e) {
@@ -135,12 +139,23 @@ export default {
       try {
         this.isParsing = true;
         const response = await axios.get(
-            `${this.apiUrl}/parse`
-        );
+            `${this.apiUrl}/parse`,
+
+        ).catch((err) => {
+          if (err.response) {
+            let err_res = err.response;
+
+            if (err_res.status === 500) {
+              let data = err_res.data;
+              this.errorHeader = data['message'];
+              this.errorArgs = data['args'];
+            }
+          }
+        });
         console.log(response.data);
-        this.ttLoadError = false;
+        this.parseErrorDialog = false;
       } catch (e) {
-        this.ttLoadError = true;
+        this.parseErrorDialog = true;
       } finally {
         this.isParsing = false;
       }
