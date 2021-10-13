@@ -1,69 +1,56 @@
 <template>
-  <div class="error-modal" v-if="show"  @click.self="hideDialog">
+  <modal-dialog v-model:show="changeShow">
     <div class="error-content">
-      <img class="modal-cross-icon" src="../../assets/cross.svg" alt="Cross" @click="hideDialog">
 <!--      <h1 class="header">Ошибка!</h1>-->
       <div class="error-body">
         <img class="modal-error-icon" src="../../assets/error.svg" alt="Error!">
         <div class="container">
           <h2 class="error-header">{{header}}</h2>
           <div class="error-args"><!-- <b>Аргументы ошибки</b> -->
-            <div class="arg" :key="arg" v-for="(arg, idx) in args"><b>{{argNames[idx]}}:</b> {{arg}}</div>
+            <div class="arg" :key="arg" v-for="(arg, argName) in args"><b>{{argName}}:</b> {{arg}}</div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </modal-dialog>
 </template>
 
 <script>
+import ModalDialog from "@/components/UI/ModalDialog";
+import toggleMixin from "@/mixins/toggleMixin";
 export default {
   name: "error-dialog",
+  components: {ModalDialog},
+  mixins: [toggleMixin],
   data() {
     return {
-      argNames: [
-          'Группа',
-          'Предмет',
-          'День недели',
-          'Номер пары'
-      ]
+
     }
   },
   props: {
     header: {
-      type: Text,
+      type: String,
       required: true
     },
     args: {
-      type: Text,
+      type: Object,
       required: true
-    },
-    show: {
-      type: Boolean,
-      default: false
     }
   },
-  methods: {
-    hideDialog() {
-      this.$emit('update:show', false);
+  computed: {
+    changeShow: {
+      get() {
+        return this.show;
+      },
+      set(val) {
+        this.$emit('update:show', val);
+      }
     }
-  },
+  }
 }
 </script>
 
 <style scoped>
-.error-modal {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-
-  display: flex;
-
-  background: rgba(0, 0, 0, 0.4);
-}
-
 .error-content {
   position: absolute;
   top: 0;
@@ -97,15 +84,6 @@ export default {
 .modal-error-icon {
   /*width: 120px;*/
   height: 110px;
-}
-
-.modal-cross-icon {
-  position: absolute;
-  right: -12px;
-  top: -12px;
-  height: 30px;
-  border-radius: 50%;
-  box-shadow: -2px 2px 5px 1px black;
 }
 
 .error-header {

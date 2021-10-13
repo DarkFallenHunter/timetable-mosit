@@ -1,17 +1,12 @@
-#build site:
-#  image: node:6
-#  stage: build
-#  script:
-#    - npm install --progress=false
-#    - npm run build
-#  artifacts:
-#    paths:
-#      - dist
+build:
+  tags:
+    - shell
+  script:
+    - docker build -t timetable-front .
 
 deploy:
   tags:
     - shell
   script:
-    - docker rm -f timetable-front
-    - docker build -t timetable-mosit .
-    - docker run -d -p 8085:80 --rm --name timetable-front timetable-mosit
+    - docker rm -f tt-front 2>/dev/null || exit 0
+    - docker run -d -p 8085:80 --name tt-front --restart unless-stopped timetable-front

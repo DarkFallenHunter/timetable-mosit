@@ -63,7 +63,7 @@ export default {
       isTeacherListLoading: false,
       tlLoadError: false,
       errorHeader:'',
-      errorArgs: '',
+      errorArgs: {},
       selectedTeacherId: '',
       selectTeacherMes: true,
       selectWeekMes: false,
@@ -86,6 +86,7 @@ export default {
         { id: "14", name: '14 неделя' },
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
+        { id: "17", name: '17 неделя' },
       ],
       // apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
       apiUrl: 'http://localhost:8088',
@@ -147,8 +148,18 @@ export default {
 
             if (err_res.status === 500) {
               let data = err_res.data;
+              let argNames = [
+                'Группа',
+                'Предмет',
+                'День недели',
+                'Номер пары'
+              ];
+              let args = {}
+
               this.errorHeader = data['message'];
-              this.errorArgs = data['args'];
+
+              data['args'].forEach((arg, idx) => args[argNames[idx]] = arg);
+              this.errorArgs = args;
             }
           }
         });
