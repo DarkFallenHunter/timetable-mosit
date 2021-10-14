@@ -89,7 +89,7 @@ export default {
         { id: "17", name: '17 неделя' },
       ],
       // apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
-      apiUrl: 'http://localhost:8088',
+      apiUrl: 'https://api-mosit.venomroms.com/',
       isParsing: false
     }
   },
