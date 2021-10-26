@@ -1,13 +1,10 @@
 <template>
-  <div class="cls-info">
-    <div class="class-placeholder" v-if="typeof classInfo === 'number'"></div>
-    <div class="class-container" v-else>
-      <div class="name">{{ classInfo.name }}</div>
-      <div class="group">{{ classInfo.group }}</div>
-      <div class="type">{{ classInfo.type.toUpperCase() }}</div>
-      <div class="room">{{ classInfo.room }}</div>
-      <div class="weeks" v-if="'week_nums' in classInfo">{{ weeks }}</div>
-    </div>
+  <div class="class-container">
+    <div class="name">{{ classInfo.name }}</div>
+    <div class="group">{{ classInfo.group }}</div>
+    <div class="type">{{ classInfo.type.toUpperCase() }}</div>
+    <div class="room">{{ classInfo.room }}</div>
+    <div class="weeks" v-if="'week_nums' in classInfo">{{ weeks }}</div>
   </div>
 </template>
 
@@ -37,21 +34,7 @@ export default {
 </script>
 
 <style scoped>
-  .cls-info {
-    border: 1px solid var(--tt-brd-clr);
-    border-top: none;
-    border-left: none;
-
-    font-size: 16px;
-    word-wrap: anywhere;
-  }
-
-  .class-placeholder {
-    height: 100%;
-    background-color: var(--tt-placaholder-bg-clr);
-  }
-
-  .cls-info > .class-container {
+  .class-container {
     height: 100%;
     display: flex;
     flex-direction: column;

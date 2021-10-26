@@ -1,5 +1,6 @@
 <template>
   <loading-circle v-if="isParsing"/>
+  <file-load-dialog :show="false"></file-load-dialog>
   <error-dialog :header="errorHeader" :args="errorArgs" v-model:show="parseErrorDialog"/>
   <div class="tl-load" v-if="isTeacherListLoading">Идет загрузка...</div>
 
@@ -36,23 +37,22 @@
       <div class="tt-load" v-else-if="isTimeTableLoading">
         Идёт загрузка расписания...
       </div>
-      <timetable-full :weekClasses="classes" v-else-if="selectedWeek === '-1'"/>
-      <timetable-for-week :weekClasses="classes" v-else/>
+      <timetable-base v-else :classes="classes" :type="selectedWeek === '-1' ? 'full' : 'week'"/>
     </div>
   </div>
 </template>
 
 <script>
-import TimetableForWeek from "@/components/TimetableForWeek";
 import axios from "axios";
 import MySelect from "@/components/UI/MySelect";
-import TimetableFull from "@/components/TimetableFull";
 import LoadingCircle from "@/components/UI/LoadingCircle";
 import ErrorDialog from "@/components/UI/ErrorDialog";
-// import TeacherSelect from "@/components/UI/TeacherSelect";
+import FileLoadDialog from "@/components/UI/FileLoadDialog";
+import TimetableBase from "../components/TimetableBase";
+
 export default {
   name: "TimetablePage",
-  components: {ErrorDialog, LoadingCircle, TimetableFull, TimetableForWeek, MySelect},
+  components: {TimetableBase, FileLoadDialog, ErrorDialog, LoadingCircle, MySelect},
   data() {
     return {
       classes: [],
@@ -88,8 +88,8 @@ export default {
         { id: "16", name: '16 неделя' },
         { id: "17", name: '17 неделя' },
       ],
-      // apiUrl: 'http://ec2-18-184-205-187.eu-central-1.compute.amazonaws.com:8088',
-      apiUrl: 'http://localhost:8088',
+      // apiUrl: 'http://localhost:8088',
+      apiUrl: 'https://api-mosit.venomroms.com/',
       isParsing: false
     }
   },
@@ -114,9 +114,11 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
         );
-        this.classes = response.data;
+        console.log(response.data);
+        this.classes = this.sliceWeekTimetableClasses(response.data);
         this.ttLoadError = false;
       } catch (e) {
+        console.log(e);
         this.ttLoadError = true;
       } finally {
         this.isTimeTableLoading = false;
@@ -128,9 +130,11 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}`
         );
-        this.classes = response.data;
+
+        this.classes = this.sliceFullTimetableClasses(response.data);
         this.ttLoadError = false;
       } catch (e) {
+        console.log(e)
         this.ttLoadError = true;
       } finally {
         this.isTimeTableLoading = false;
@@ -195,6 +199,35 @@ export default {
 
       this.selectWeekMes = false;
 
+    },
+    sliceFullTimetableClasses(classes) {
+      let endIdx = classes.length - 1;
+
+      for ( let i = endIdx; i >= 0; i-- )
+      {
+        let classes_element = classes[i];
+
+        let all_classes = [...classes_element["odd"], ...classes_element["even"]];
+        if (all_classes.every(classes_list => classes_list.length === 0))
+          endIdx -= 1;
+        else
+          break;
+      }
+
+      return classes.slice(0, endIdx + 1)
+    },
+    sliceWeekTimetableClasses(classes) {
+      let endIdx = classes.length - 1;
+
+      for ( let i = endIdx; i >= 0; i-- )
+      {
+        if (classes[i].every(class_info => class_info === 0))
+          endIdx -= 1;
+        else
+          break;
+      }
+
+      return classes.slice(0, endIdx + 1);
     }
   },
   mounted() {

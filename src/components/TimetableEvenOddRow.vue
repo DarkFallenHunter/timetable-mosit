@@ -8,11 +8,15 @@
           :key="idx"
           v-for="(clssInfo, idx) in classesInfo['odd']"
       >
-        <class
-            v-for="clsInfo in clssInfo"
+        <div
+            class="class-placeholder"
+            v-if="clssInfo.length === 0"
+        ></div>
+        <div class="cls-info" v-else :key="idx" v-for="(clsInfo, idx) in clssInfo">
+          <class
             :class-info="clsInfo"
-            :key="clsInfo.id"
-        />
+          />
+        </div>
       </div>
     </div>
     <div class="odd-even-row">
@@ -22,11 +26,15 @@
           :key="idx"
           v-for="(clssInfo, idx) in classesInfo['even']"
       >
-        <class
-            v-for="clsInfo in clssInfo"
-            :class-info="clsInfo"
-            :key="clsInfo.id"
-        />
+        <div
+            class="class-placeholder"
+            v-if="clssInfo.length === 0"
+        ></div>
+        <div class="cls-info" v-else :key="idx" v-for="(clsInfo, idx) in clssInfo">
+          <class
+              :class-info="clsInfo"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -79,5 +87,23 @@ export default {
 
 .tt-even-odd-row > .odd-even-row > .tt-vertical-header {
   border-left: none;
+}
+
+.cls-info {
+  border: 1px solid var(--tt-brd-clr);
+  border-top: none;
+  border-left: none;
+
+  font-size: 16px;
+  word-wrap: anywhere;
+}
+
+.class-placeholder {
+  border: 1px solid var(--tt-brd-clr);
+  border-top: none;
+  border-left: none;
+
+  height: 100%;
+  background-color: var(--tt-placaholder-bg-clr);
 }
 </style>

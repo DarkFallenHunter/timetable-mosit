@@ -9,8 +9,5 @@ export default {
         hideDialog() {
             this.$emit('update:show', false);
         }
-    },
-    mounted() {
-        console.log('mixin mounted');
     }
 }
