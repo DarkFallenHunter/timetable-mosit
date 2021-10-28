@@ -114,7 +114,6 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
         );
-        console.log(response.data);
         this.classes = this.sliceWeekTimetableClasses(response.data);
         this.ttLoadError = false;
       } catch (e) {
@@ -258,5 +257,16 @@ export default {
   .sel-teacher-lbl,
   .sel-week-lbl {
     margin-right: 10px;
+  }
+
+  @media all and (device-width: 900px), all and (max-width: 900px) {
+    .control-block {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .select-teacher {
+      margin-bottom: 10px;
+    }
   }
 </style>

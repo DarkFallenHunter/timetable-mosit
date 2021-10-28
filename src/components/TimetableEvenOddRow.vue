@@ -43,9 +43,11 @@
 <script>
 import Class from "@/components/Class";
 import TtVerticalHeader from "@/components/UI/TtVerticalHeader";
+import hiddenMixin from "../mixins/hiddenMixin";
 export default {
   name: "timetable-even-odd-row",
   components: {TtVerticalHeader, Class},
+  mixins: [hiddenMixin],
   props: {
     classesInfo: {
       type: Object,
@@ -54,6 +56,17 @@ export default {
     headerText: {
       type: String,
       required: true
+    }
+  },
+  watch: {
+    showingDay(newDay) {
+      if (this.showingDay < 0 || this.showingDay > 5 ) {
+        return;
+      }
+
+      const elements = this.$el.querySelectorAll('.clss');
+      const showingIdxs = [newDay, newDay + elements.length / 2];
+      this.showElemsInList(elements, showingIdxs);
     }
   }
 }
@@ -94,7 +107,6 @@ export default {
   border-top: none;
   border-left: none;
 
-  font-size: 16px;
   word-wrap: anywhere;
 }
 
@@ -105,5 +117,24 @@ export default {
 
   height: 100%;
   background-color: var(--tt-placaholder-bg-clr);
+}
+
+@media all and (device-width: 1200px), all and (max-width: 1200px) {
+  .tt-even-odd-row > .odd-even-row {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+  }
+
+  .tt-even-odd-row > .odd-even-row > .clss {
+    display: none;
+  }
+
+  .tt-even-odd-row > .odd-even-row > .clss.active {
+    display: grid;
+  }
+
+  .class-placeholder {
+    width: 100%;
+  }
 }
 </style>

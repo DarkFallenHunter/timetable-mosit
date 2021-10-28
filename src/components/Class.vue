@@ -40,6 +40,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     padding: 10px;
+
+    /*font-size: calc(var(--baze-font-size) - 2px );*/
   }
 
   .group {

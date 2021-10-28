@@ -16,7 +16,7 @@ export default {
   name: "my-select",
   props: {
     modelValue: {
-      type: String
+      type: [String, Number]
     },
     options: {
       type: Array,
@@ -49,6 +49,12 @@ export default {
 <style scoped>
 .select {
   padding: 10px;
-  font-size: 16px;
+  font-size: var(--selecter-font-size);
+}
+
+@media all and (device-width: 1024px), all and (max-width: 1024px){
+  .select {
+    padding: 5px;
+  }
 }
 </style>

@@ -2,8 +2,8 @@
 <template>
   <div class="tt-header">
     <div class="placeholders">
-    <tt-vertical-header :cell-text="'00:00'" :is-placeholder="true"/>
-    <tt-vertical-header v-if="isWeeksMark" :cell-text="'2'" :is-placeholder="true"/>
+      <tt-vertical-header :cell-text="'00:00'" :is-placeholder="true"/>
+      <tt-vertical-header v-if="isWeeksMark" :cell-text="'2'" :is-placeholder="true"/>
     </div>
     <div
         class="tt-header-cell"
@@ -18,9 +18,16 @@
 <script>
 import TtHeaderCellContent from "@/components/UI/TtHeaderCellContent";
 import TtVerticalHeader from "@/components/UI/TtVerticalHeader";
+import hiddenMixin from "../../mixins/hiddenMixin";
 export default {
   name: "tt-header",
   components: {TtVerticalHeader, TtHeaderCellContent},
+  mixins: [hiddenMixin],
+  data() {
+    return {
+      query: '.tt-header'
+    }
+  },
   props: {
     isWeeksMark: {
       type: Boolean,
@@ -29,6 +36,16 @@ export default {
     cellsText: {
       type: Array,
       required: true
+    }
+  },
+  watch: {
+    showingDay(newDay) {
+      if (this.showingDay < 0 || this.showingDay > 5 ) {
+        return;
+      }
+
+      const elements = this.$el.querySelectorAll('.tt-header > .tt-header-cell');
+      this.showOneElemInList(elements, newDay);
     }
   }
 }
@@ -43,10 +60,6 @@ export default {
   font-weight: normal;
 }
 
-/*.tt-header.with-week-marks {*/
-/*  grid-template-columns: min-content min-content 1fr 1fr 1fr 1fr 1fr 1fr;*/
-/*}*/
-
 .tt-header > .tt-header-cell {
   padding: 5px;
   background-color: var(--tt-head-bg-clr);
@@ -59,5 +72,20 @@ export default {
   display: flex;
   flex-direction: row;
   border-right: 1px solid var(--tt-head-brd-clr);
+}
+
+@media all and (max-width: 1200px){
+  .tt-header {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+  }
+
+  .tt-header > .tt-header-cell {
+    display: none;
+  }
+
+  .tt-header > .tt-header-cell.active {
+    display: block;
+  }
 }
 </style>

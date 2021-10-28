@@ -1,7 +1,7 @@
 <template>
   <div class="timetable-row">
     <tt-vertical-header :cell-text="headerText"/>
-    <div class="classes-row">
+    <div class="tt-row">
       <div class="cls-info" :key="idx" v-for="(clsInfo, idx) in classes">
         <div
             class="class-placeholder"
@@ -19,10 +19,12 @@
 <script>
 import Class from "@/components/Class";
 import TtVerticalHeader from "@/components/UI/TtVerticalHeader";
+import hiddenMixin from "../mixins/hiddenMixin";
 
 export default {
   name: "timetable-row",
   components: {TtVerticalHeader, Class},
+  mixins: [hiddenMixin],
   props: {
     classes: {
       type: Array,
@@ -31,6 +33,16 @@ export default {
     headerText: {
       type: String,
       required: true
+    }
+  },
+  watch: {
+    showingDay(newDay) {
+      if (this.showingDay < 0 || this.showingDay > 5 ) {
+        return;
+      }
+
+      const elements = this.$el.querySelectorAll('.cls-info');
+      this.showOneElemInList(elements, newDay);
     }
   }
 }
@@ -43,7 +55,7 @@ export default {
   box-sizing: border-box;
 }
 
-.classes-row {
+.tt-row {
   grid-column: 2;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -54,12 +66,30 @@ export default {
   border-top: none;
   border-left: none;
 
-  font-size: 16px;
   word-wrap: anywhere;
 }
 
 .class-placeholder {
   height: 100%;
   background-color: var(--tt-placaholder-bg-clr);
+}
+
+@media all and (device-width: 1200px), all and (max-width: 1200px) {
+  .tt-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .tt-row > .cls-info {
+    display: none;
+  }
+
+  .tt-row > .cls-info.active {
+    display: grid;
+  }
+
+  .class-placeholder {
+    width: 100%;
+  }
 }
 </style>

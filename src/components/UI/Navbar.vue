@@ -20,7 +20,7 @@ name: "navbar"
     padding-bottom: 10px;
 
     border-bottom: 4px solid var(--mosit-gray-color);
-    font-size: 20px;
+    font-size: var(--navbar-font-size);
   }
 
   .navbar a {
@@ -31,6 +31,5 @@ name: "navbar"
 
   .navbar a.router-link-exact-active {
     color: var(--mosit-gray-color);
-    /*text-decoration: underline;*/
   }
 </style>
