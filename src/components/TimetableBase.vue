@@ -94,7 +94,6 @@ export default {
 
       if ( windowWidth < 1200 && this.lastWidth > 1200 ) {
         this.showingDay = 0;
-        console.log(windowWidth, this.lastWidth);
       }
 
       this.lastWidth = windowWidth;
