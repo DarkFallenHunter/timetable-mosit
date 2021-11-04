@@ -16,7 +16,10 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  --mosit-gray-color: #737373;
+  --mosit-blue-color: #164060;
+  --mosit-gray-color: #CCCCCC;
+  --mosit-white-color: #EFEFEF;
+  --mosit-black-color: #282828;
   --main-text-color: black;
   --tt-head-bg-clr: gray;
   --tt-head-clr: white;
@@ -31,15 +34,20 @@ export default {
   --header-text-font-size: 25px;
   --navbar-font-size: 20px;
   --selecter-font-size: 16px;
-  --baze-font-family: Avenir, Helvetica, Arial, sans-serif;
+  --baze-font-family: 'Exo2', Arial, sans-serif;
+  --app--horiz-padding: 10%;
 }
 
 select {
   outline: none;
 }
 
+@font-face {
+  font-family: "Exo2";
+  src: url("assets/fonts/Exo2-VariableFont_wght.ttf") format("opentype");
+}
+
 .app {
-  padding: 0 10%;
   font-family: var(--baze-font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -63,10 +71,7 @@ select {
     --header-text-font-size: 20px;
     --navbar-font-size: 16px;
     --selecter-font-size: 16px;
-  }
-
-  .app {
-    padding: 0 5%;
+    --app-horiz-padding: 5%;
   }
 }
 
@@ -77,10 +82,7 @@ select {
     --header-text-font-size: 18px;
     --navbar-font-size: 18px;
     --selecter-font-size: 18px;
-  }
-
-  .app {
-    padding: 0 2%;
+    --app--horiz-padding: 2%;
   }
 }
 
@@ -88,6 +90,7 @@ select {
   * {
     --header-font-size: 22px;
     --header-text-font-size: 16px;
+    --baze-font-size: 20px;
   }
 }
 </style>

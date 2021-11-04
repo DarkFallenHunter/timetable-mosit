@@ -1,10 +1,6 @@
 <!-- Подумать над KEY -->
 <template>
   <div class="tt-header">
-    <div class="placeholders">
-      <tt-vertical-header :cell-text="'00:00'" :is-placeholder="true"/>
-      <tt-vertical-header v-if="isWeeksMark" :cell-text="'2'" :is-placeholder="true"/>
-    </div>
     <div
         class="tt-header-cell"
         :key="idx"
@@ -17,17 +13,11 @@
 
 <script>
 import TtHeaderCellContent from "@/components/UI/TtHeaderCellContent";
-import TtVerticalHeader from "@/components/UI/TtVerticalHeader";
 import hiddenMixin from "../../mixins/hiddenMixin";
 export default {
   name: "tt-header",
-  components: {TtVerticalHeader, TtHeaderCellContent},
+  components: {TtHeaderCellContent},
   mixins: [hiddenMixin],
-  data() {
-    return {
-      query: '.tt-header'
-    }
-  },
   props: {
     isWeeksMark: {
       type: Boolean,

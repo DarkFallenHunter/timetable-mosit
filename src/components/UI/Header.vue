@@ -6,10 +6,6 @@
         <h1>КАФЕДРА <span>М</span>АТЕМАТИЧЕСКОГО <span>О</span>БЕСПЕЧЕНИЯ И <span>С</span>ТАНДАРТИЗАЦИИ <span>И</span>НФОРМАЦИОННЫХ <span>Т</span>ЕХНОЛОГИЙ</h1>
       </div>
       <div class="site-mark">ВНУТРЕННИЙ САЙТ</div>
-<!--      <div class="contacts">-->
-<!--        <div class="phone">8(999)999-99-99</div>-->
-<!--        <div class="e-mail">mosit@mirea.ru</div>-->
-<!--      </div>-->
     </div>
     <navbar></navbar>
   </div>
@@ -21,14 +17,17 @@
 
 <style scoped>
   .header {
-    padding: 10px 0;
     font-size: var(--header-text-font-size);
+    color: var(--mosit-white-color);
   }
 
   .header > .info {
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    background-color: var(--mosit-black-color);
+    padding: 10px var(--app--horiz-padding);
   }
 
   .header > .info > .name {
@@ -76,7 +75,7 @@
     }
 
     .header > .info > .name > .logo {
-      height: 90px;
+      height: 80px;
     }
 
     .header > .info > .site-mark {
@@ -86,12 +85,41 @@
 
   @media all and (max-width: 425px), all and (device-width: 425px) {
     .header > .info > .name > h1 {
-      text-align: center;
+      text-align: left;
+      font-size: 20px;
     }
 
     .header > .info > .name > .logo {
       margin-left: 10px;
-      height: 100px;
+      height: 90px;
+    }
+
+    .header > .info > .site-mark {
+      margin-top: 10px;
+    }
+  }
+
+  @media all and (max-width: 425px), all and (device-width: 425px) {
+    .header > .info > .name > .logo {
+      margin-left: 5px;
+      margin-right: 15px;
+      height: 80px;
+    }
+
+    .header > .info > .site-mark {
+      margin-top: 10px;
+    }
+  }
+
+  @media all and (max-width: 320px), all and (device-width: 320px) {
+    .header > .info > .name > h1 {
+      text-align: left;
+      font-size: 18px;
+    }
+
+    .header > .info > .name > .logo {
+      margin-left: 2px;
+      height: 70px;
     }
 
     .header > .info > .site-mark {

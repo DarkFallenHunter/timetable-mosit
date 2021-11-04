@@ -1,12 +1,4 @@
 export default {
-    props: {
-        showingDay: {
-            type: Number,
-            validator(value) {
-                return value >= 0 && value < 6;
-            }
-        }
-    },
     methods: {
         hideElement(elem) {
             elem.classList.remove('active');

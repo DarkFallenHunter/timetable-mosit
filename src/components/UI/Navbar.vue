@@ -15,11 +15,11 @@ name: "navbar"
     display: flex;
     justify-content: space-around;
 
-    margin: 0 auto;
+    margin: 0 var(--app--horiz-padding);
     padding-top: 30px;
     padding-bottom: 10px;
 
-    border-bottom: 4px solid var(--mosit-gray-color);
+    border-bottom: 4px solid var(--mosit-black-color);
     font-size: var(--navbar-font-size);
   }
 
@@ -30,6 +30,6 @@ name: "navbar"
   }
 
   .navbar a.router-link-exact-active {
-    color: var(--mosit-gray-color);
+    color: var(--mosit-black-color);
   }
 </style>

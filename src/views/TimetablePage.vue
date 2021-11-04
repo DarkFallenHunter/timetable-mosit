@@ -7,7 +7,7 @@
   <div class="tt-page" v-else>
     <div class="control-block">
       <div class="select-teacher">
-        <div class="sel-teacher-lbl">Преподаватель:</div>
+        <div class="sel-lbl">Преподаватель:</div>
         <my-select
             v-model="selectedTeacherId"
             :options="teachersList"
@@ -16,7 +16,7 @@
       </div>
 
       <div class="select-week">
-        <div class="sel-week-lbl">Неделя:</div>
+        <div class="sel-lbl">Неделя:</div>
         <my-select
             v-model="selectedWeek"
             :options="weeks"
@@ -24,21 +24,19 @@
         />
       </div>
     </div>
-    <div class="timetable">
-      <div class="tt-error" v-if="ttLoadError">
-        Ой, что-то пошло не так.
-      </div>
-      <div class="tt-warn" v-else-if="selectTeacherMes">
-        Выберите преподавателя.
-      </div>
-      <div class="tt-warn" v-else-if="selectWeekMes">
-        Выберите неделю.
-      </div>
-      <div class="tt-load" v-else-if="isTimeTableLoading">
-        Идёт загрузка расписания...
-      </div>
-      <timetable-base v-else :classes="classes" :type="selectedWeek === '-1' ? 'full' : 'week'"/>
+    <div class="tt-error" v-if="ttLoadError">
+      Ой, что-то пошло не так.
     </div>
+    <div class="tt-warn" v-else-if="selectTeacherMes">
+      Выберите преподавателя.
+    </div>
+    <div class="tt-warn" v-else-if="selectWeekMes">
+      Выберите неделю.
+    </div>
+    <div class="tt-load" v-else-if="isTimeTableLoading">
+      Идёт загрузка расписания...
+    </div>
+    <timetable-base v-else :classes="classes" :type="selectedWeek === '-1' ? 'full' : 'week'"/>
   </div>
 </template>
 
@@ -59,7 +57,7 @@ export default {
       teachersList: [],
       isTimeTableLoading: false,
       ttLoadError: false,
-      selectedWeek: '',
+      selectedWeek: '-1',
       isTeacherListLoading: false,
       tlLoadError: false,
       errorHeader:'',
@@ -87,6 +85,17 @@ export default {
         { id: "15", name: '15 неделя' },
         { id: "16", name: '16 неделя' },
         { id: "17", name: '17 неделя' },
+      ],
+      headerContent: [
+        '1 пара 9:00-10:30',
+        '2 пара 10:40-12:10',
+        '3 пара 12:40-14:10',
+        '4 пара 14:20-15:50',
+        '5 пара 16:20-17:50',
+        '6 пара 18:00-19:30',
+        '7 пара 19:40-21:10',
+        '7 пара маг. 18:30-20:00',
+        '8 пара маг. 20:10-21:40',
       ],
       // apiUrl: 'http://localhost:8088',
       apiUrl: 'https://api-mosit.venomroms.com/',
@@ -130,7 +139,7 @@ export default {
             `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}`
         );
 
-        this.classes = this.sliceFullTimetableClasses(response.data);
+        this.classes = this.formatFullTimetableClasses(response.data);
         this.ttLoadError = false;
       } catch (e) {
         console.log(e)
@@ -199,34 +208,58 @@ export default {
       this.selectWeekMes = false;
 
     },
-    sliceFullTimetableClasses(classes) {
-      let endIdx = classes.length - 1;
+    formatFullTimetableClasses(classes) {
+      let result = [[],[],[],[],[],[]];
 
-      for ( let i = endIdx; i >= 0; i-- )
+      for ( let [pairIdx, pairClasses] of classes.entries(classes) )
       {
-        let classes_element = classes[i];
+        let classInfo = {};
+        let oddClasses = pairClasses['odd'];
+        let evenClasses = pairClasses['even'];
 
-        let all_classes = [...classes_element["odd"], ...classes_element["even"]];
-        if (all_classes.every(classes_list => classes_list.length === 0))
-          endIdx -= 1;
-        else
-          break;
+        for ( let classIdx = 0; classIdx < 6; classIdx++ )
+        {
+          let oddClass = oddClasses[classIdx];
+          let evenClass = evenClasses[classIdx];
+          classInfo = {};
+
+          if ( oddClass.length <= 0 && evenClass.length <= 0 )
+          {
+            continue;
+          }
+
+          classInfo['odd'] = oddClass;
+          classInfo['even'] = evenClass;
+          classInfo['header'] = this.headerContent[pairIdx];
+
+          result[classIdx].push(classInfo);
+        }
       }
 
-      return classes.slice(0, endIdx + 1)
+      return result;
     },
     sliceWeekTimetableClasses(classes) {
-      let endIdx = classes.length - 1;
+      let result = [[],[],[],[],[],[]];
 
-      for ( let i = endIdx; i >= 0; i-- )
+      for ( let [pairIdx, pairClasses] of classes.entries(classes) )
       {
-        if (classes[i].every(class_info => class_info === 0))
-          endIdx -= 1;
-        else
-          break;
+        let classInfo = {};
+        let cls = null;
+
+        for ( let classIdx = 0; classIdx < 6; classIdx++ )
+        {
+          cls = pairClasses[classIdx];
+          if ( cls === 0 )
+            continue;
+
+          classInfo['info'] = cls;
+          classInfo['header'] = this.headerContent[pairIdx];
+
+          result[classIdx].push(classInfo);
+        }
       }
 
-      return classes.slice(0, endIdx + 1);
+      return result;
     }
   },
   mounted() {
@@ -237,6 +270,10 @@ export default {
 </script>
 
 <style scoped>
+  .tt-page {
+    padding: 0 var(--app--horiz-padding);
+  }
+
   .control-block {
     display: flex;
     margin: 15px 0;
@@ -254,8 +291,7 @@ export default {
     justify-self: end;
   }
 
-  .sel-teacher-lbl,
-  .sel-week-lbl {
+  .sel-lbl {
     margin-right: 10px;
   }
 
@@ -267,6 +303,18 @@ export default {
 
     .select-teacher {
       margin-bottom: 10px;
+    }
+  }
+
+  @media all and (max-width: 425px), all and (device-width: 425px) {
+    .select-teacher,
+    .select-week {
+      flex-direction: column;
+    }
+
+    .sel-lbl {
+      margin-right: 0;
+      margin-bottom: 5px;
     }
   }
 </style>

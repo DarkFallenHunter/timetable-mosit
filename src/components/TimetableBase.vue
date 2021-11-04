@@ -1,68 +1,65 @@
 <template>
-  <div class="tt-control" v-if="classes.length > 0">
-    <button
-        class="tt-button"
-        @mousedown="showingDay--"
-        :disabled="showingDay <= 0"
-    >
-      &#10094; Предыдущий
-    </button>
-    <button
-        class="tt-button"
-        @mousedown="showingDay++"
-        :disabled="showingDay >= 5"
-    >
-      Следующий &#10095;
-    </button>
-  </div>
+  <timetable-placeholder v-if="classes.every(i => i.length <= 0)"/>
 
-  <timetable-placeholder v-if="classes.length <= 0"/>
-  <div v-else-if="type === 'week'" class="timetable-container">
-    <tt-header :showingDay="showingDay" class="top-header" :cells-text="weekDays" ></tt-header>
-    <timetable-row
-        :key="idx"
-        :classes="classes"
-        v-for="(classes, idx) in classes"
-        :showing-day="showingDay"
-        :header-text="headerContent[idx]"
-    />
-  </div>
-  <div v-else-if="type === 'full'" class="timetable-container">
-    <tt-header :showingDay="showingDay" :is-weeks-mark="true" class="top-header" :cells-text="weekDays" ></tt-header>
-    <timetable-even-odd-row
-        :key="idx"
-        :classes-info="classes"
-        :header-text="headerContent[idx]"
-        :showing-day="showingDay"
-        v-for="(classes, idx) in classes"
-    />
+  <div class="timetable" v-else>
+    <div class="tt-control" v-if="classes.length > 0">
+      <button
+          class="tt-button"
+          :class="{ 'small-button': smallDevice }"
+          @mousedown="showingDay--"
+          :disabled="showingDay <= 0"
+      >
+        &#10094; <span v-if="!smallDevice">Предыдущий</span>
+      </button>
+      <button
+          class="tt-button"
+          :class="{ 'small-button': smallDevice }"
+          @mousedown="showingDay++"
+          :disabled="showingDay >= 5"
+      >
+        <span v-if="!smallDevice">Следующий</span> &#10095;
+      </button>
+    </div>
+
+    <div class="tt-container">
+      <div class="tt-column" :key="idx" v-for="(classesInfo, idx) in classes">
+        <tt-column-header :text="weekDays[idx]"/>
+        <tt-column-placeholder v-if="classesInfo.length <= 0"/>
+        <div v-else-if="type === 'week'" class="tt-column-classes">
+          <timetable-item
+              :key="idx"
+              :class-info="classesItem['info']"
+              v-for="(classesItem, idx) in classesInfo"
+              :header-text="classesItem['header']"
+          />
+        </div>
+        <div v-else-if="type === 'full'" class="tt-column-classes">
+          <timetable-even-odd-item
+              :key="idx"
+              :classes-info="classesItem"
+              :header-text="classesItem['header']"
+              v-for="(classesItem, idx) in classesInfo"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import TimetablePlaceholder from "./TimetablePlaceholder";
-import TimetableRow from "@/components/TimetableRow";
-import TtHeader from "@/components/UI/TtHeader";
-import TimetableEvenOddRow from "@/components/TimetableEvenOddRow";
-
-
+import TtColumnHeader from "./UI/TtColumnHeader";
+import TimetableItem from "./TimetableItem";
+import TimetableEvenOddItem from "./TimetableEvenOddItem";
+import hiddenMixin from "../mixins/hiddenMixin";
+import TtColumnPlaceholder from "./TtColumnPlaceholder";
 
 export default {
-  components: {TimetablePlaceholder, TimetableRow, TimetableEvenOddRow, TtHeader},
+  components: {TtColumnPlaceholder, TimetableEvenOddItem, TimetableItem, TtColumnHeader, TimetablePlaceholder},
+  mixins: [hiddenMixin],
   name: "timetable-base",
   data() {
     return {
-      headerContent: [
-        '1 пара\n9:00\n10:30',
-        '2 пара\n10:40\n12:10',
-        '3 пара\n12:40\n14:10',
-        '4 пара\n14:20\n15:50',
-        '5 пара\n16:20\n17:50',
-        '6 пара\n18:00\n19:30',
-        '7 пара\n19:40\n21:10',
-        '7 пара\nмаг.\n18:30\n20:00',
-        '8 пара\nмаг.\n20:10\n21:40',
-      ],
       weekDays: [
         'Понедельник',
         'Вторник',
@@ -72,7 +69,8 @@ export default {
         'Суббота'
       ],
       showingDay: null,
-      lastWidth: null
+      lastWidth: null,
+      smallDevice: false
     }
   },
   props: {
@@ -96,18 +94,17 @@ export default {
         this.showingDay = 0;
       }
 
+      this.smallDevice = windowWidth <= 375;
       this.lastWidth = windowWidth;
-    }
-  },
-  computed: {
-    classHeaders() {
-      return this.headerContent.slice(0, this.classes.length)
     }
   },
   watch: {
     showingDay(newDay, oldDay) {
       if (newDay < 0 || newDay > 5)
         this.showingDay = oldDay;
+
+      const elements = this.$el.querySelectorAll('.tt-container > .tt-column');
+      this.showOneElemInList(elements, this.showingDay);
     }
   },
   mounted() {
@@ -122,8 +119,15 @@ export default {
 </script>
 
 <style scoped>
-.timetable-container {
+.tt-container {
   display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.tt-container > .tt-column {
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  padding: 0 2px;
 }
 
 .tt-control {
@@ -140,7 +144,7 @@ export default {
   border-radius: 20px;
   border: none;
 
-  background-color: var(--mosit-gray-color);
+  background-color: var(--mosit-blue-color);
   color: var(--tt-bg-color);
 
   font-size: var(--baze-font-size);
@@ -150,7 +154,26 @@ export default {
   visibility: hidden;
 }
 
+.tt-control > .tt-button.small-button {
+  width: 50px;
+  border-radius: 50%;
+
+  font-size: 25px;
+}
+
 @media all and (device-width: 1200px), all and (max-width: 1200px) {
+  .tt-container {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-container > .tt-column {
+    display: none;
+  }
+
+  .tt-container > .tt-column.active {
+    display: grid;
+  }
+
   .tt-control > .tt-button {
     display: block;
   }
