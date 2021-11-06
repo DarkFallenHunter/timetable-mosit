@@ -221,16 +221,17 @@ export default {
         {
           let oddClass = oddClasses[classIdx];
           let evenClass = evenClasses[classIdx];
-          classInfo = {};
 
           if ( oddClass.length <= 0 && evenClass.length <= 0 )
           {
             continue;
           }
 
-          classInfo['odd'] = oddClass;
-          classInfo['even'] = evenClass;
-          classInfo['header'] = this.headerContent[pairIdx];
+          classInfo = {
+            'odd': oddClass,
+            'even': evenClass,
+            'header': this.headerContent[pairIdx]
+          }
 
           result[classIdx].push(classInfo);
         }
@@ -241,9 +242,10 @@ export default {
     sliceWeekTimetableClasses(classes) {
       let result = [[],[],[],[],[],[]];
 
+      console.log(classes);
       for ( let [pairIdx, pairClasses] of classes.entries(classes) )
       {
-        let classInfo = {};
+        let classInfo = null;
         let cls = null;
 
         for ( let classIdx = 0; classIdx < 6; classIdx++ )
@@ -252,13 +254,16 @@ export default {
           if ( cls === 0 )
             continue;
 
-          classInfo['info'] = cls;
-          classInfo['header'] = this.headerContent[pairIdx];
+          classInfo = {
+            'info': cls,
+            'header': this.headerContent[pairIdx]
+          };
 
           result[classIdx].push(classInfo);
         }
       }
 
+      console.log(result);
       return result;
     }
   },
