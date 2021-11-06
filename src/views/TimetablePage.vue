@@ -123,7 +123,7 @@ export default {
         const response = await axios.get(
             `${this.apiUrl}/teacher_classes/${this.selectedTeacherId}/${this.selectedWeek}`
         );
-        this.classes = this.sliceWeekTimetableClasses(response.data);
+        this.classes = this.formatWeekTimetableClasses(response.data);
         this.ttLoadError = false;
       } catch (e) {
         console.log(e);
@@ -213,7 +213,7 @@ export default {
 
       for ( let [pairIdx, pairClasses] of classes.entries(classes) )
       {
-        let classInfo = {};
+        let classInfo = null;
         let oddClasses = pairClasses['odd'];
         let evenClasses = pairClasses['even'];
 
@@ -239,10 +239,9 @@ export default {
 
       return result;
     },
-    sliceWeekTimetableClasses(classes) {
+    formatWeekTimetableClasses(classes) {
       let result = [[],[],[],[],[],[]];
 
-      console.log(classes);
       for ( let [pairIdx, pairClasses] of classes.entries(classes) )
       {
         let classInfo = null;
@@ -263,7 +262,6 @@ export default {
         }
       }
 
-      console.log(result);
       return result;
     }
   },
