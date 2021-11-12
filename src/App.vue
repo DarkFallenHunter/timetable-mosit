@@ -79,7 +79,6 @@ select {
   * {
     --baze-font-size: 18px;
     --header-font-size: 22px;
-    --header-text-font-size: 18px;
     --navbar-font-size: 18px;
     --selecter-font-size: 18px;
     --app--horiz-padding: 2%;
@@ -89,7 +88,6 @@ select {
 @media all and (max-width: 425px), all and (device-width: 425px) {
   * {
     --header-font-size: 22px;
-    --header-text-font-size: 16px;
     --baze-font-size: 20px;
   }
 }

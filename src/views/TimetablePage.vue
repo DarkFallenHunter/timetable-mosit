@@ -1,44 +1,95 @@
 <template>
-  <loading-circle v-if="isParsing"/>
-  <file-load-dialog :show="false"></file-load-dialog>
-  <error-dialog :header="errorHeader" :args="errorArgs" v-model:show="parseErrorDialog"/>
-  <div class="tl-load" v-if="isTeacherListLoading">Идет загрузка...</div>
+  <div class="page-container">
+    <loading-circle v-if="isParsing"/>
+    <file-load-dialog :show="false"></file-load-dialog>
+    <error-dialog :header="errorHeader" :args="errorArgs" v-model:show="parseErrorDialog"/>
+    <div class="tl-load" v-if="isTeacherListLoading">Идет загрузка...</div>
 
-  <div class="tt-page" v-else>
-    <div class="control-block">
-      <div class="select-teacher">
-        <div class="sel-lbl">Преподаватель:</div>
-        <my-select
-            v-model="selectedTeacherId"
-            :options="teachersList"
-            :on-change-func="changeTeacher"
+    <div class="tt-page" v-else>
+      <div
+          class="filter-btn"
+          @mousedown="$el.querySelector('.filter-btn').classList.toggle('active')"
+          :class="{'active': !isAllSelected}"
+      >
+        <div class="filter-title">
+          {{isAllSelected ? `${teacherName()} ${weekName()}` : 'Фильтры'}}
+        </div>
+        <img
+            src="../assets/arrow-down.svg"
+            alt="\/"
+            class="open-arrow"
+        >
+      </div>
+      <div class="control-block" ref="control">
+        <div class="select-teacher">
+          <div class="sel-lbl">Преподаватель:</div>
+          <my-select
+              v-model="selectedTeacherId"
+              :options="teachersList"
+              :on-change-func="changeTeacher"
+              @change="hideControlBlock"
+          />
+        </div>
+
+        <div class="select-week">
+          <div class="sel-lbl">Неделя:</div>
+          <my-select
+              v-model="selectedWeek"
+              :options="weeks"
+              :on-change-func="changeWeek"
+              @change="hideControlBlock"
+          />
+        </div>
+
+        <img
+            src="../assets/arrow-up.svg"
+            alt="/\"
+            class="close-button"
+            @mousedown="hideControlBlock"
+        >
+      </div>
+      <div class="tt-error" v-if="ttLoadError">
+        Ой, что-то пошло не так.
+      </div>
+      <div class="tt-warn" v-else-if="selectTeacherMes">
+        Выберите преподавателя.
+      </div>
+      <div class="tt-warn" v-else-if="selectWeekMes">
+        Выберите неделю.
+      </div>
+      <div class="tt-load" v-else-if="isTimeTableLoading">
+        Идёт загрузка расписания...
+      </div>
+      <timetable-placeholder v-else-if="clssIsEmpty"/>
+      <div v-show="!clssIsEmpty && !isTimeTableLoading" class="timetable">
+        <div class="tt-control" v-if="classes.length > 0">
+          <button
+              class="tt-button"
+              :class="{ 'small-button': isSmallDevice }"
+              @mousedown="showingDay--"
+              :disabled="showingDay <= 0"
+          >
+            &#10094; <span v-if="!isSmallDevice">Предыдущий</span>
+          </button>
+          <button
+              class="tt-button"
+              :class="{ 'small-button': isSmallDevice }"
+              @mousedown="showingDay++"
+              :disabled="showingDay >= 5"
+          >
+            <span v-if="!isSmallDevice">Следующий</span> &#10095;
+          </button>
+        </div>
+        <timetable-base
+            :showing-day="showingDay"
+            :classes="classes"
+            :type="timetableType"
         />
       </div>
-
-      <div class="select-week">
-        <div class="sel-lbl">Неделя:</div>
-        <my-select
-            v-model="selectedWeek"
-            :options="weeks"
-            :on-change-func="changeWeek"
-        />
-      </div>
     </div>
-    <div class="tt-error" v-if="ttLoadError">
-      Ой, что-то пошло не так.
-    </div>
-    <div class="tt-warn" v-else-if="selectTeacherMes">
-      Выберите преподавателя.
-    </div>
-    <div class="tt-warn" v-else-if="selectWeekMes">
-      Выберите неделю.
-    </div>
-    <div class="tt-load" v-else-if="isTimeTableLoading">
-      Идёт загрузка расписания...
-    </div>
-    <timetable-base v-else :classes="classes" :type="selectedWeek === '-1' ? 'full' : 'week'"/>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -47,13 +98,15 @@ import LoadingCircle from "@/components/UI/LoadingCircle";
 import ErrorDialog from "@/components/UI/ErrorDialog";
 import FileLoadDialog from "@/components/UI/FileLoadDialog";
 import TimetableBase from "../components/TimetableBase";
+import TimetablePlaceholder from "../components/TimetablePlaceholder";
 
 export default {
   name: "TimetablePage",
-  components: {TimetableBase, FileLoadDialog, ErrorDialog, LoadingCircle, MySelect},
+  components: {TimetablePlaceholder, TimetableBase, FileLoadDialog, ErrorDialog, LoadingCircle, MySelect},
   data() {
     return {
       classes: [],
+      clssIsEmpty: true,
       teachersList: [],
       isTimeTableLoading: false,
       ttLoadError: false,
@@ -66,6 +119,8 @@ export default {
       selectTeacherMes: true,
       selectWeekMes: false,
       parseErrorDialog: false,
+      isSmallDevice: false,
+      showingDay: -1,
       weeks: [
         { id: "-1", name: 'Все недели' },
         { id: "1", name: '1 неделя' },
@@ -99,7 +154,8 @@ export default {
       ],
       // apiUrl: 'http://localhost:8088',
       apiUrl: 'https://api-mosit.venomroms.com/',
-      isParsing: false
+      isParsing: false,
+      timetableType: 'full'
     }
   },
   methods: {
@@ -125,6 +181,10 @@ export default {
         );
         this.classes = this.formatWeekTimetableClasses(response.data);
         this.ttLoadError = false;
+        this.timetableType = 'week';
+
+        if (this.showingDay !== -1)
+          this.showingDay = 0;
       } catch (e) {
         console.log(e);
         this.ttLoadError = true;
@@ -141,6 +201,10 @@ export default {
 
         this.classes = this.formatFullTimetableClasses(response.data);
         this.ttLoadError = false;
+        this.timetableType = 'full';
+
+        if (this.showingDay !== -1)
+          this.showingDay = 0;
       } catch (e) {
         console.log(e)
         this.ttLoadError = true;
@@ -153,7 +217,6 @@ export default {
         this.isParsing = true;
         const response = await axios.get(
             `${this.apiUrl}/parse`,
-
         ).catch((err) => {
           if (err.response) {
             let err_res = err.response;
@@ -206,7 +269,6 @@ export default {
         this.selectTeacherMes = true;
 
       this.selectWeekMes = false;
-
     },
     formatFullTimetableClasses(classes) {
       let result = [[],[],[],[],[],[]];
@@ -263,11 +325,42 @@ export default {
       }
 
       return result;
+    },
+    checkDeviceWidth() {
+      const windowWidth = window.innerWidth;
+
+      if ( windowWidth < 1200 && ( this.lastWidth > 1200 || this.showingDay === -1 ))
+        this.showingDay = 0;
+
+      this.lastWidth = windowWidth;
+      this.isSmallDevice = windowWidth <= 375;
+    },
+    teacherName() {
+      return this.$el.querySelector('.select-teacher > .select').selectedOptions[0].text;
+    },
+    weekName() {
+      return this.$el.querySelector('.select-week > .select').selectedOptions[0].text;
+    },
+    hideControlBlock() {
+      this.$el.querySelector('.filter-btn').classList.remove('active');
+    }
+  },
+  computed: {
+    isAllSelected: function () {
+      return this.selectedTeacherId !== '' && this.selectedWeek !== '';
+    }
+  },
+  watch: {
+    classes() {
+      this.clssIsEmpty = this.classes.every(i => i.length <= 0);
     }
   },
   mounted() {
     this.fetchTeachesList();
-    document.querySelector('.logo').addEventListener('click', this.parseXlsxs.bind(this));
+    this.checkDeviceWidth();
+
+    // document.querySelector('.logo').addEventListener('click', this.parseXlsxs.bind(this));
+    window.addEventListener('resize', this.checkDeviceWidth)
   }
 }
 </script>
@@ -279,7 +372,6 @@ export default {
 
   .control-block {
     display: flex;
-    margin: 15px 0;
     justify-content: space-around;
   }
 
@@ -298,14 +390,126 @@ export default {
     margin-right: 10px;
   }
 
+  .tt-control {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    margin: 10px 0;
+  }
+
+  .tt-control > .tt-button {
+    display: none;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+
+    background-color: var(--mosit-blue-color);
+    color: var(--tt-bg-color);
+
+    font-size: var(--baze-font-size);
+    cursor: pointer;
+  }
+
+  .tt-control > .tt-button:disabled {
+    visibility: hidden;
+  }
+
+  .tt-control > .tt-button.small-button {
+    width: 50px;
+    border-radius: 50%;
+
+    font-size: 25px;
+  }
+
+  .tt-error,
+  .tt-warn,
+  .tt-load {
+    margin: 15px 0;
+  }
+
+  .filter-btn {
+    display: none;
+    align-items: flex-end;
+
+    padding: 5px 10px;
+
+    border-radius: 10px;
+    background-color: var(--mosit-black-color);
+    color: var(--mosit-white-color);
+
+    font-weight: bold;
+    cursor: pointer;
+
+    --arrow-width: 20px;
+  }
+
+  .filter-btn > .filter-title {
+    margin: 0 auto;
+  }
+
+  .filter-btn > .open-arrow {
+    height: var(--arrow-width);
+    margin-left: calc(var(--arrow-width) * -1);
+  }
+
+  .filter-btn.active {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .control-block > .close-button {
+    display: none;
+    align-self: flex-end;
+    height: 45px;
+
+    margin: -45px 10px 10px 0;
+
+    color: var(--mosit-white-color);
+    background-color: var(--mosit-black-color);
+    border-radius: 50%;
+
+    cursor: pointer;
+  }
+
+  @media all and (device-width: 1200px), all and (max-width: 1200px) {
+    .tt-control > .tt-button {
+      display: block;
+    }
+  }
+
   @media all and (device-width: 900px), all and (max-width: 900px) {
     .control-block {
+      display: none;
       flex-direction: column;
       align-items: center;
+
+      background-color: var(--mosit-white-color);
+      border-radius: 10px;
+    }
+
+    .filter-btn {
+      display: flex;
+    }
+
+    .filter-btn.active + .control-block {
+      display: flex;
+      padding-top: 10px;
+
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+
+    .filter-btn.active > .open-arrow {
+      display: none;
     }
 
     .select-teacher {
       margin-bottom: 10px;
+    }
+
+    .control-block > .close-button {
+      display: block;
     }
   }
 
@@ -318,6 +522,14 @@ export default {
     .sel-lbl {
       margin-right: 0;
       margin-bottom: 5px;
+    }
+  }
+
+  @media all and (max-width: 320px), all and (device-width: 320px) {
+    .control-block > .close-button {
+      height: 40px;
+      margin-right: 5px;
+      margin-top: -38px;
     }
   }
 </style>

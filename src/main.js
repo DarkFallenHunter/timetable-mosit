@@ -11,4 +11,5 @@ components.forEach(component => {
 
 app
     .use(router)
+    .provide('apiUrl', 'https://api-mosit.venomroms.com')
     .mount('.app');

@@ -13,6 +13,8 @@ export default {
 <style scoped>
   .tt-placeholder {
     width: 100%;
+    margin: 10px auto;
+
     color: orangered;
   }
 </style>

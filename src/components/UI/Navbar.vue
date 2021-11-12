@@ -15,9 +15,8 @@ name: "navbar"
     display: flex;
     justify-content: space-around;
 
-    margin: 0 var(--app--horiz-padding);
-    padding-top: 30px;
-    padding-bottom: 10px;
+    margin: 20px var(--app--horiz-padding);
+    padding: 10px 0;
 
     border-bottom: 4px solid var(--mosit-black-color);
     font-size: var(--navbar-font-size);

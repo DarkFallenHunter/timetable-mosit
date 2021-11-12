@@ -5,14 +5,41 @@
         <img src="../../assets/logo-mosit.svg" alt="MOSIT" class="logo">
         <h1>КАФЕДРА <span>М</span>АТЕМАТИЧЕСКОГО <span>О</span>БЕСПЕЧЕНИЯ И <span>С</span>ТАНДАРТИЗАЦИИ <span>И</span>НФОРМАЦИОННЫХ <span>Т</span>ЕХНОЛОГИЙ</h1>
       </div>
-      <div class="site-mark">ВНУТРЕННИЙ САЙТ</div>
+      <div class="site-mark">ИДЁТ {{nowWeek}}&#8209;АЯ НЕДЕЛЯ
+      </div>
     </div>
     <navbar></navbar>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 
+export default {
+  inject: ['apiUrl'],
+  data() {
+    return {
+      nowWeek: null
+    }
+  },
+  methods: {
+    async fetchNowWeek() {
+      try {
+        this.isTimeTableLoading = true;
+        const response = await axios.get(
+            `${this.apiUrl}/now_week`
+        );
+
+        this.nowWeek = response.data;
+      } catch (e) {
+        console.log(e)
+      }
+    },
+  },
+  mounted() {
+    this.fetchNowWeek();
+  }
+}
 </script>
 
 <style scoped>
@@ -79,7 +106,7 @@
     }
 
     .header > .info > .site-mark {
-      margin: auto;
+      margin: 10px auto auto auto;
     }
   }
 
@@ -92,10 +119,6 @@
     .header > .info > .name > .logo {
       margin-left: 10px;
       height: 90px;
-    }
-
-    .header > .info > .site-mark {
-      margin-top: 10px;
     }
   }
 
